@@ -1,6 +1,6 @@
 # encoding=utf-8
-from pymongo import MongoClient
 from pprint import pprint
+from cwb36hr2mongo import F_C0032_001mongo
 import urllib.request
 import urllib.parse
 import json
@@ -19,11 +19,21 @@ else:
 
 with open("token","r") as token_file:
     token = token_file.readline().rstrip('\n')
-    print(token)
+    #print(token)
 target_url.add_header( 'Authorization' , token)
 fp = urllib.request.urlopen(target_url)
 pure_data = json.loads(fp.read().decode('utf-8'))
-pprint(pure_data)
-
+#pprint(pure_data)
 
 fp.close()
+
+#save to mongo
+result = F_C0032_001mongo(pure_data)
+if result == -2:
+	print ('data structure and mongo insert error!')
+elif result == -3:
+	print ('data structure and mongo data error!')
+elif result == -1:
+	print ('mongo insert error!')
+else :
+	print ('data insert to mongo success!')
